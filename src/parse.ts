@@ -1,7 +1,7 @@
 import { Parser } from "./parser";
-import { stringIterator } from "./token-iterator";
+import { stringIterator, TokenIterator } from "./token-iterator";
 
 export const parseString = <V>(
-  parser: Parser<string, number, V>,
+  parser: Parser<TokenIterator<string, number>, V>,
   input: string
 ): V => parser(stringIterator(input));

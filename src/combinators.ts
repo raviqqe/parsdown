@@ -1,7 +1,10 @@
 import { Parser } from "./parser";
+import { TokenIterator } from "./token-iterator";
+
+type Token<I extends TokenIterator<any, any>> = ReturnType<I["next"]>;
 
 export const any =
-  <T, S>(): Parser<T, S, T> =>
+  <I extends TokenIterator<any, any>>(): Parser<I, Token<I>> =>
   (iterator) => {
     const token = iterator.next();
 
@@ -11,7 +14,9 @@ export const any =
   };
 
 export const token =
-  <T, S>(test: (token: T) => boolean): Parser<T, S, T> =>
+  <I extends TokenIterator<any, any>>(
+    test: (token: Token<I>) => boolean
+  ): Parser<I, Token<I>> =>
   (iterator) => {
     const token = iterator.next();
 
@@ -24,19 +29,21 @@ export const token =
     return token;
   };
 
-type Sequence<T extends Parser<never, any, unknown>[]> = {
+type Sequence<T extends Parser<any, unknown>[]> = {
   [key in keyof T]: ReturnType<T[key]>;
 };
 
 export const sequence =
-  <T, S, P extends [Parser<T, S, any>, ...Parser<T, S, any>[]]>(
+  <P extends [Parser<any, any>, ...Parser<any, any>[]]>(
     ...parsers: P
-  ): Parser<T, S, Sequence<P>> =>
+  ): Parser<Parameters<P[number]>[0], Sequence<P>> =>
   (iterator) =>
     parsers.map((parser) => parser(iterator)) as Sequence<P>;
 
 export const many =
-  <T, S, V>(parser: Parser<T, S, V>): Parser<T, S, V[]> =>
+  <P extends Parser<any, any>>(
+    parser: P
+  ): Parser<Parameters<P>[0], ReturnType<P>[]> =>
   (iterator) => {
     const values = [];
 
@@ -54,7 +61,9 @@ export const many =
     return values;
   };
 
-export const many1 = <T, S, V>(parser: Parser<T, S, V>): Parser<T, S, V[]> => {
+export const many1 = <P extends Parser<any, any>>(
+  parser: P
+): Parser<Parameters<P>[0], ReturnType<P>[]> => {
   const parse = many(parser);
 
   return (iterator) => {
@@ -68,22 +77,16 @@ export const many1 = <T, S, V>(parser: Parser<T, S, V>): Parser<T, S, V[]> => {
   };
 };
 
-const assertToken: <T>(token: T | null) => asserts token is NonNullable<T> = <
-  T
->(
-  token: T | null
-): asserts token is NonNullable<T> => {
-  if (!token) {
-    throw new Error("Unexpected end of tokens");
-  }
-};
-
 export const surrounded =
-  <T, S, V>(
-    start: Parser<T, S, unknown>,
-    content: Parser<T, S, V>,
-    end: Parser<T, S, unknown>
-  ): Parser<T, S, V> =>
+  <
+    P1 extends Parser<any, any>,
+    P2 extends Parser<any, any>,
+    P3 extends Parser<any, any>
+  >(
+    start: P1,
+    content: P2,
+    end: P3
+  ): Parser<Parameters<P2>[0], ReturnType<P2>> =>
   (iterator) => {
     start(iterator);
     const value = content(iterator);
@@ -93,17 +96,17 @@ export const surrounded =
   };
 
 export const map =
-  <T, S, V, W>(
-    callback: (value: V) => W,
-    parser: Parser<T, S, V>
-  ): Parser<T, S, W> =>
+  <P extends Parser<any, any>, Q>(
+    callback: (value: ReturnType<P>) => Q,
+    parser: P
+  ): Parser<Parameters<P>[0], Q> =>
   (iterator) =>
     callback(parser(iterator));
 
 export const choice =
-  <T, S, P extends [Parser<T, S, any>, ...Parser<T, S, any>[]]>(
+  <P extends [Parser<any, any>, ...Parser<any, any>[]]>(
     ...parsers: P
-  ): Parser<T, S, Sequence<P>[number]> =>
+  ): Parser<Parameters<P[number]>[0], Sequence<P>[number]> =>
   (iterator) => {
     for (const parser of parsers) {
       const state = iterator.save();
@@ -117,3 +120,13 @@ export const choice =
 
     throw new Error("All parser failed");
   };
+
+const assertToken: <T>(token: T | null) => asserts token is NonNullable<T> = <
+  T
+>(
+  token: T | null
+): asserts token is NonNullable<T> => {
+  if (!token) {
+    throw new Error("Unexpected end of tokens");
+  }
+};
