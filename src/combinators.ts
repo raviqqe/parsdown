@@ -29,7 +29,7 @@ type Sequence<T extends Parser<never, any, unknown>[]> = {
 };
 
 export const sequence =
-  <T, S, P extends [Parser<T, S, any>, ...Parser<T, S, any>[]]>(
+  <T, S, P extends [Parser<T, S, unknown>, ...Parser<T, S, unknown>[]]>(
     ...parsers: P
   ): Parser<T, S, Sequence<P>> =>
   (iterator) =>
@@ -101,7 +101,7 @@ export const map =
     callback(parser(iterator));
 
 export const choice =
-  <T, S, P extends [Parser<T, S, any>, ...Parser<T, S, any>[]]>(
+  <T, S, P extends [Parser<T, S, unknown>, ...Parser<T, S, unknown>[]]>(
     ...parsers: P
   ): Parser<T, S, Sequence<P>[number]> =>
   (iterator) => {
@@ -109,7 +109,7 @@ export const choice =
       const state = iterator.save();
 
       try {
-        return parser(iterator);
+        return parser(iterator) as Sequence<P>[number];
       } catch (_) {
         iterator.restore(state);
       }
