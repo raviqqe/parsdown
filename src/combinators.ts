@@ -44,6 +44,20 @@ export const many =
     return values;
   };
 
+export const many1 = <T, S, V>(parser: Parser<T, S, V>) => {
+  const parse = many(parser);
+
+  (iterator: TokenIterator<T, S>): V[] => {
+    const values = parse(iterator);
+
+    if (values.length === 0) {
+      throw new Error("Too few values");
+    }
+
+    return values;
+  };
+};
+
 const assertToken: <T>(token: T | null) => asserts token is NonNullable<T> = <
   T
 >(
