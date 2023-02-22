@@ -101,15 +101,15 @@ export const map =
     callback(parser(iterator));
 
 export const choice =
-  <T, S, P extends [Parser<T, S, unknown>, ...Parser<T, S, unknown>[]]>(
-    ...parsers: P
-  ): Parser<T, S, Sequence<P>[number]> =>
+  <T, S, V extends [unknown, ...unknown[]]>(
+    ...parsers: { [key in keyof V]: Parser<T, S, V[key]> }
+  ): Parser<T, S, V[number]> =>
   (iterator) => {
     for (const parser of parsers) {
       const state = iterator.save();
 
       try {
-        return parser(iterator) as Sequence<P>[number];
+        return parser(iterator);
       } catch (_) {
         iterator.restore(state);
       }

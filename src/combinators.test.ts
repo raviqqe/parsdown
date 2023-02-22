@@ -110,14 +110,10 @@ describe(choice.name, () => {
   it("maps a value", () => {
     expect(
       parseString(
-        choice<
-          string,
-          number,
-          [
-            Parser<string, number, [string, string]>,
-            Parser<string, number, [string, string, string]>
-          ]
-        >(sequence(a, b), sequence(a, a, b)),
+        choice<string, number, [[string, string], [string, string, string]]>(
+          sequence(a, b),
+          sequence(a, a, b)
+        ),
         "aab"
       )
     ).toEqual(["a", "a", "b"]);
