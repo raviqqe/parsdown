@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { many, many1, sequence, token } from "./combinators";
+import { many, many1, map, sequence, token } from "./combinators";
 import { parseString } from "./parse";
 
 describe(token.name, () => {
@@ -32,7 +32,7 @@ describe(sequence.name, () => {
     ).toEqual(["a"]);
   });
 
-  it("parses a token", () => {
+  it("parses tokens", () => {
     expect(
       parseString(
         sequence(
@@ -70,5 +70,19 @@ describe(many1.name, () => {
     expect(() =>
       parseString(many1(token((character) => character === "a")), "")
     ).toThrowError("Too few values");
+  });
+});
+
+describe(map.name, () => {
+  it("maps a value", () => {
+    expect(
+      parseString(
+        map(
+          (a) => a + "b",
+          token<string, number>((character) => character === "a")
+        ),
+        "a"
+      )
+    ).toEqual("ab");
   });
 });

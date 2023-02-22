@@ -88,3 +88,11 @@ export const surrounded =
 
     return value;
   };
+
+export const map =
+  <T, S, V, W>(
+    callback: (value: V) => W,
+    parser: Parser<T, S, V>
+  ): Parser<T, S, W> =>
+  (iterator) =>
+    callback(parser(iterator));
