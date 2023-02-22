@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { choice, many, many1, map, sequence, token } from "./combinators";
 import { parseString } from "./parse";
-import { Parser } from "./parser";
 
 const a = token<string, number>((character) => character === "a");
 const b = token<string, number>((character) => character === "b");
