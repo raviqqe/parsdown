@@ -18,7 +18,7 @@ export const many =
   (iterator: TokenIterator<T, S>): V[] => {
     const values = [];
 
-    while (true) {
+    for (;;) {
       const state = iterator.save();
 
       try {
