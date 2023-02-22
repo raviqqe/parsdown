@@ -29,11 +29,11 @@ type Sequence<T extends Parser<never, any, unknown>[]> = {
 };
 
 export const sequence =
-  <T, S, Parsers extends [Parser<T, S, any>, ...Parser<T, S, any>[]]>(
-    ...parsers: Parsers
-  ): Parser<T, S, Sequence<Parsers>> =>
+  <T, S, P extends [Parser<T, S, any>, ...Parser<T, S, any>[]]>(
+    ...parsers: P
+  ): Parser<T, S, Sequence<P>> =>
   (iterator) =>
-    parsers.map((parser) => parser(iterator)) as Sequence<Parsers>;
+    parsers.map((parser) => parser(iterator)) as Sequence<P>;
 
 export const many =
   <T, S, V>(parser: Parser<T, S, V>): Parser<T, S, V[]> =>
