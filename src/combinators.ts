@@ -24,16 +24,12 @@ export const token =
     return token;
   };
 
-type Sequence<T extends Parser<never, any, unknown>[]> = {
-  [key in keyof T]: ReturnType<T[key]>;
-};
-
 export const sequence =
-  <T, S, P extends [Parser<T, S, unknown>, ...Parser<T, S, unknown>[]]>(
-    ...parsers: P
-  ): Parser<T, S, Sequence<P>> =>
+  <T, S, V extends [unknown, ...unknown[]]>(
+    ...parsers: { [key in keyof V]: Parser<T, S, V[key]> }
+  ): Parser<T, S, V> =>
   (iterator) =>
-    parsers.map((parser) => parser(iterator)) as Sequence<P>;
+    parsers.map((parser) => parser(iterator)) as V;
 
 export const many =
   <T, S, V>(parser: Parser<T, S, V>): Parser<T, S, V[]> =>
