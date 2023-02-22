@@ -1,6 +1,6 @@
 # ts-parcom
 
-Parser combinator for nontrivial tokens in TypeScript
+Parser combinator for nontrivial tokens in TypeScript.
 
 ## License
 
