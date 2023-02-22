@@ -99,3 +99,21 @@ export const map =
   ): Parser<T, S, W> =>
   (iterator) =>
     callback(parser(iterator));
+
+export const choice =
+  <T, S, P extends [Parser<T, S, any>, ...Parser<T, S, any>[]]>(
+    ...parsers: P
+  ): Parser<T, S, Sequence<P>[number]> =>
+  (iterator) => {
+    for (const parser of parsers) {
+      const state = iterator.save();
+
+      try {
+        return parser(iterator);
+      } catch (_) {
+        iterator.restore(state);
+      }
+    }
+
+    throw new Error("All parser failed");
+  };
