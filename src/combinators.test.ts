@@ -43,6 +43,21 @@ describe(sequence.name, () => {
       )
     ).toEqual(["a", "b"]);
   });
+
+  it("parses tokens of different types", () => {
+    const xs: [string, number] = parseString(
+      sequence(
+        token<string, number>((character) => character === "a"),
+        map(
+          (x) => Number(x),
+          token<string, number>((character) => character === "1")
+        )
+      ),
+      "a1"
+    );
+
+    expect(xs).toEqual(["a", 1]);
+  });
 });
 
 describe(many.name, () => {

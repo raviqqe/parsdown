@@ -1,5 +1,4 @@
 import { Parser } from "./parser";
-import { TokenIterator } from "./token-iterator";
 
 export const any =
   <T, S>(): Parser<T, S, T> =>
@@ -25,12 +24,16 @@ export const token =
     return token;
   };
 
+type Sequence<T extends Parser<never, any, unknown>[]> = {
+  [key in keyof T]: ReturnType<T[key]>;
+};
+
 export const sequence =
   <T, S, Parsers extends [Parser<T, S, any>, ...Parser<T, S, any>[]]>(
     ...parsers: Parsers
-  ) =>
-  (iterator: TokenIterator<T, S>) =>
-    parsers.map((parser) => parser(iterator));
+  ): Parser<T, S, Sequence<Parsers>> =>
+  (iterator) =>
+    parsers.map((parser) => parser(iterator)) as Sequence<Parsers>;
 
 export const many =
   <T, S, V>(parser: Parser<T, S, V>): Parser<T, S, V[]> =>
