@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { many, many1, token } from "./combinators";
+import { many, many1, sequence, token } from "./combinators";
 import { parseString } from "./parse";
 
 describe(token.name, () => {
@@ -19,6 +19,29 @@ describe(token.name, () => {
         "b"
       )
     ).toThrowError("Unexpected token");
+  });
+});
+
+describe(sequence.name, () => {
+  it("parses a token", () => {
+    expect(
+      parseString(
+        sequence(token<string, number>((character) => character === "a")),
+        "a"
+      )
+    ).toEqual(["a"]);
+  });
+
+  it("parses a token", () => {
+    expect(
+      parseString(
+        sequence(
+          token<string, number>((character) => character === "a"),
+          token<string, number>((character) => character === "b")
+        ),
+        "ab"
+      )
+    ).toEqual(["a", "b"]);
   });
 });
 

@@ -1,4 +1,5 @@
 import { Parser } from "./parser";
+import { TokenIterator } from "./token-iterator";
 
 export const any =
   <T, S>(): Parser<T, S, T> =>
@@ -23,6 +24,13 @@ export const token =
 
     return token;
   };
+
+export const sequence =
+  <T, S, Parsers extends [Parser<T, S, any>, ...Parser<T, S, any>[]]>(
+    ...parsers: Parsers
+  ) =>
+  (iterator: TokenIterator<T, S>) =>
+    parsers.map((parser) => parser(iterator));
 
 export const many =
   <T, S, V>(parser: Parser<T, S, V>): Parser<T, S, V[]> =>
@@ -66,3 +74,17 @@ const assertToken: <T>(token: T | null) => asserts token is NonNullable<T> = <
     throw new Error("Unexpected end of tokens");
   }
 };
+
+export const surrounded =
+  <T, S, V>(
+    start: Parser<T, S, unknown>,
+    content: Parser<T, S, V>,
+    end: Parser<T, S, unknown>
+  ): Parser<T, S, V> =>
+  (iterator) => {
+    start(iterator);
+    const value = content(iterator);
+    end(iterator);
+
+    return value;
+  };
