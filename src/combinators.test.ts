@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { many, token } from "./combinators";
+import { many, many1, token } from "./combinators";
 import { parseString } from "./parse";
 
 describe(token.name, () => {
@@ -33,5 +33,19 @@ describe(many.name, () => {
     expect(
       parseString(many(token((character) => character === "a")), "ab")
     ).toEqual(["a"]);
+  });
+});
+
+describe(many1.name, () => {
+  it("parses many tokens", () => {
+    expect(
+      parseString(many1(token((character) => character === "a")), "aa")
+    ).toEqual(["a", "a"]);
+  });
+
+  it("fails to parse 0 token", () => {
+    expect(() =>
+      parseString(many1(token((character) => character === "a")), "")
+    ).toThrowError("Too few values");
   });
 });

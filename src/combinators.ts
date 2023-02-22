@@ -1,9 +1,8 @@
 import { Parser } from "./parser";
-import { TokenIterator } from "./token-iterator";
 
 export const any =
-  <T, S>() =>
-  (iterator: TokenIterator<T, S>): T => {
+  <T, S>(): Parser<T, S, T> =>
+  (iterator) => {
     const token = iterator.next();
 
     assertToken(token);
@@ -12,8 +11,8 @@ export const any =
   };
 
 export const token =
-  <T, S>(test: (token: T) => boolean) =>
-  (iterator: TokenIterator<T, S>): T => {
+  <T, S>(test: (token: T) => boolean): Parser<T, S, T> =>
+  (iterator) => {
     const token = iterator.next();
 
     assertToken(token);
@@ -26,8 +25,8 @@ export const token =
   };
 
 export const many =
-  <T, S, V>(parser: Parser<T, S, V>) =>
-  (iterator: TokenIterator<T, S>): V[] => {
+  <T, S, V>(parser: Parser<T, S, V>): Parser<T, S, V[]> =>
+  (iterator) => {
     const values = [];
 
     for (;;) {
@@ -44,10 +43,10 @@ export const many =
     return values;
   };
 
-export const many1 = <T, S, V>(parser: Parser<T, S, V>) => {
+export const many1 = <T, S, V>(parser: Parser<T, S, V>): Parser<T, S, V[]> => {
   const parse = many(parser);
 
-  (iterator: TokenIterator<T, S>): V[] => {
+  return (iterator) => {
     const values = parse(iterator);
 
     if (values.length === 0) {
