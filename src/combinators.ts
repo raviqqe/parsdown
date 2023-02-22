@@ -1,7 +1,9 @@
 import { Parser } from "./parser";
 import { TokenIterator } from "./token-iterator";
 
-type Token<I extends TokenIterator<any, any>> = ReturnType<I["next"]>;
+type Token<I extends TokenIterator<any, any>> = NonNullable<
+  ReturnType<I["next"]>
+>;
 
 export const any =
   <I extends TokenIterator<any, any>>(): Parser<I, Token<I>> =>
@@ -29,19 +31,24 @@ export const token =
     return token;
   };
 
-type Sequence<T extends Parser<any, unknown>[]> = {
+type Sequence<T extends Parser<TokenIterator<any, any>, unknown>[]> = {
   [key in keyof T]: ReturnType<T[key]>;
 };
 
 export const sequence =
-  <P extends [Parser<any, any>, ...Parser<any, any>[]]>(
+  <
+    P extends [
+      Parser<TokenIterator<any, any>, any>,
+      ...Parser<TokenIterator<any, any>, any>[]
+    ]
+  >(
     ...parsers: P
   ): Parser<Parameters<P[number]>[0], Sequence<P>> =>
   (iterator) =>
     parsers.map((parser) => parser(iterator)) as Sequence<P>;
 
 export const many =
-  <P extends Parser<any, any>>(
+  <P extends Parser<TokenIterator<any, any>, any>>(
     parser: P
   ): Parser<Parameters<P>[0], ReturnType<P>[]> =>
   (iterator) => {
@@ -61,7 +68,7 @@ export const many =
     return values;
   };
 
-export const many1 = <P extends Parser<any, any>>(
+export const many1 = <P extends Parser<TokenIterator<any, any>, any>>(
   parser: P
 ): Parser<Parameters<P>[0], ReturnType<P>[]> => {
   const parse = many(parser);
@@ -79,9 +86,9 @@ export const many1 = <P extends Parser<any, any>>(
 
 export const surrounded =
   <
-    P1 extends Parser<any, any>,
-    P2 extends Parser<any, any>,
-    P3 extends Parser<any, any>
+    P1 extends Parser<TokenIterator<any, any>, any>,
+    P2 extends Parser<TokenIterator<any, any>, any>,
+    P3 extends Parser<TokenIterator<any, any>, any>
   >(
     start: P1,
     content: P2,
@@ -96,7 +103,7 @@ export const surrounded =
   };
 
 export const map =
-  <P extends Parser<any, any>, Q>(
+  <P extends Parser<TokenIterator<any, any>, any>, Q>(
     callback: (value: ReturnType<P>) => Q,
     parser: P
   ): Parser<Parameters<P>[0], Q> =>
@@ -104,7 +111,12 @@ export const map =
     callback(parser(iterator));
 
 export const choice =
-  <P extends [Parser<any, any>, ...Parser<any, any>[]]>(
+  <
+    P extends [
+      Parser<TokenIterator<any, any>, any>,
+      ...Parser<TokenIterator<any, any>, any>[]
+    ]
+  >(
     ...parsers: P
   ): Parser<Parameters<P[number]>[0], Sequence<P>[number]> =>
   (iterator) => {

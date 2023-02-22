@@ -1,9 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { choice, many, many1, map, sequence, token } from "./combinators";
 import { parseString } from "./parse";
+import { Parser } from "./parser";
+import { TokenIterator } from "./token-iterator";
 
-const a = token((character) => character === "a");
-const b = token((character) => character === "b");
+const a: Parser<TokenIterator<string, number>, string> = token(
+  (character) => character === "a"
+);
+const b: Parser<TokenIterator<string, number>, string> = token(
+  (character) => character === "b"
+);
 
 describe(token.name, () => {
   it("parses a token", () => {
@@ -47,7 +53,7 @@ describe(sequence.name, () => {
   it("parses tokens of different types", () => {
     const xs: [string, number] = parseString(
       sequence(
-        token((character) => character === "a"),
+        a,
         map(
           (x) => Number(x),
           token((character) => character === "1")
@@ -82,9 +88,7 @@ describe(many1.name, () => {
   });
 
   it("fails to parse 0 token", () => {
-    expect(() =>
-      parseString(many1(token((character) => character === "a")), "")
-    ).toThrowError("Too few values");
+    expect(() => parseString(many1(a), "")).toThrowError("Too few values");
   });
 });
 
@@ -93,7 +97,7 @@ describe(map.name, () => {
     expect(
       parseString(
         map(
-          (a) => a + "b",
+          (a: string) => a + "b",
           token((character) => character === "a")
         ),
         "a"
