@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { many, many1, map, sequence, token } from "./combinators";
+import { choice, many, many1, map, sequence, token } from "./combinators";
 import { parseString } from "./parse";
+import { Parser } from "./parser";
+
+const a = token<string, number>((character) => character === "a");
+const b = token<string, number>((character) => character === "b");
 
 describe(token.name, () => {
   it("parses a token", () => {
@@ -99,5 +103,23 @@ describe(map.name, () => {
         "a"
       )
     ).toEqual("ab");
+  });
+});
+
+describe(choice.name, () => {
+  it("maps a value", () => {
+    expect(
+      parseString(
+        choice<
+          string,
+          number,
+          [
+            Parser<string, number, [string, string]>,
+            Parser<string, number, [string, string, string]>
+          ]
+        >(sequence(a, b), sequence(a, a, b)),
+        "aab"
+      )
+    ).toEqual(["a", "a", "b"]);
   });
 });
