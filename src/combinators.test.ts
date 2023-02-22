@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { choice, many, many1, map, sequence, token } from "./combinators";
 import { parseString } from "./parse";
+import { Parser } from "./parser";
 
-const a = token((character) => character === "a");
-const b = token((character) => character === "b");
+const a = token<string, number>((character) => character === "a");
+const b = token<string, number>((character) => character === "b");
 
 describe(token.name, () => {
   it("parses a token", () => {
@@ -28,7 +29,10 @@ describe(token.name, () => {
 describe(sequence.name, () => {
   it("parses a token", () => {
     expect(
-      parseString(sequence(token((character) => character === "a")), "a")
+      parseString(
+        sequence(token<string, number>((character) => character === "a")),
+        "a"
+      )
     ).toEqual(["a"]);
   });
 
@@ -36,8 +40,8 @@ describe(sequence.name, () => {
     expect(
       parseString(
         sequence(
-          token((character) => character === "a"),
-          token((character) => character === "b")
+          token<string, number>((character) => character === "a"),
+          token<string, number>((character) => character === "b")
         ),
         "ab"
       )
@@ -47,10 +51,10 @@ describe(sequence.name, () => {
   it("parses tokens of different types", () => {
     const xs: [string, number] = parseString(
       sequence(
-        token((character) => character === "a"),
+        token<string, number>((character) => character === "a"),
         map(
           (x) => Number(x),
-          token((character) => character === "1")
+          token<string, number>((character) => character === "1")
         )
       ),
       "a1"
@@ -94,7 +98,7 @@ describe(map.name, () => {
       parseString(
         map(
           (a) => a + "b",
-          token((character) => character === "a")
+          token<string, number>((character) => character === "a")
         ),
         "a"
       )
@@ -105,7 +109,17 @@ describe(map.name, () => {
 describe(choice.name, () => {
   it("maps a value", () => {
     expect(
-      parseString(choice(sequence(a, b), sequence(a, a, b)), "aab")
+      parseString(
+        choice<
+          string,
+          number,
+          [
+            Parser<string, number, [string, string]>,
+            Parser<string, number, [string, string, string]>
+          ]
+        >(sequence(a, b), sequence(a, a, b)),
+        "aab"
+      )
     ).toEqual(["a", "a", "b"]);
   });
 });
