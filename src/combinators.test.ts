@@ -5,6 +5,7 @@ import {
   many1,
   map,
   separatedBy,
+  separatedOrEndedBy,
   sequence,
   surrounded,
   token,
@@ -122,5 +123,60 @@ describe(separatedBy.name, () => {
 
   it("fails to parse values", () => {
     expect(() => parseString(separatedBy(a, b), "ab")).toThrowError();
+  });
+
+  it("does not parse a separactor", () => {
+    expect(parseString(separatedOrEndedBy(a, b), "b")).toEqual([]);
+  });
+
+  it("parses a value after separated values", () => {
+    expect(parseString(sequence(separatedBy(a, b), c), "abac")).toEqual([
+      ["a", "a"],
+      "c",
+    ]);
+  });
+});
+
+describe(separatedOrEndedBy.name, () => {
+  it("parses nothing", () => {
+    expect(parseString(separatedOrEndedBy(a, b), "")).toEqual([]);
+  });
+
+  it("parses a value", () => {
+    expect(parseString(separatedOrEndedBy(a, b), "a")).toEqual(["a"]);
+  });
+
+  it("parses two values", () => {
+    expect(parseString(separatedOrEndedBy(a, b), "aba")).toEqual(["a", "a"]);
+  });
+
+  it("parses two values with the last separator", () => {
+    expect(parseString(separatedOrEndedBy(a, b), "abab")).toEqual(["a", "a"]);
+  });
+
+  it("parses three values", () => {
+    expect(parseString(separatedOrEndedBy(a, b), "ababa")).toEqual([
+      "a",
+      "a",
+      "a",
+    ]);
+  });
+
+  it("parses three values with the last separator", () => {
+    expect(parseString(separatedOrEndedBy(a, b), "ababab")).toEqual([
+      "a",
+      "a",
+      "a",
+    ]);
+  });
+
+  it("does not parse a separactor", () => {
+    expect(parseString(separatedOrEndedBy(a, b), "b")).toEqual([]);
+  });
+
+  it("parses a value after separated values", () => {
+    expect(parseString(sequence(separatedOrEndedBy(a, b), c), "ababc")).toEqual(
+      [["a", "a"], "c"]
+    );
   });
 });
