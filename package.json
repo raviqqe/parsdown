@@ -1,5 +1,5 @@
 {
-  "name": "ts-parcom",
+  "name": "@raviqqe/parcom",
   "version": "1.0.0",
   "description": "Parser combinator in TypeScript",
   "repository": "https://github.com/raviqqe/ts-parcom",
