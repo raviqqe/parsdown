@@ -14,6 +14,7 @@ But you can easily extend it by forking it and modifying `TokenIterator` to hand
 
 - Support for nontrivial tokens
   - Lines in line-oriented configuration file formats, HTML nodes, etc.
+- A simple set of combinators
 
 ## License
 
