@@ -144,11 +144,12 @@ export const separatedBy =
     }
   };
 
-export const separatedOrEndedBy = <T, S, V>(
-  content: Parser<T, S, V>,
-  separator: Parser<T, S, unknown>
-): Parser<T, S, V[]> => {
-  return (iterator) => {
+export const separatedOrEndedBy =
+  <T, S, V>(
+    content: Parser<T, S, V>,
+    separator: Parser<T, S, unknown>
+  ): Parser<T, S, V[]> =>
+  (iterator) => {
     const values = [];
     const state = iterator.save();
 
@@ -172,4 +173,3 @@ export const separatedOrEndedBy = <T, S, V>(
       }
     }
   };
-};
