@@ -19,3 +19,27 @@ export const stringIterator = (
     save: () => index,
   };
 };
+
+export const iterableIterator = <T>(
+  iterable: Iterable<T>
+): TokenIterator<string, number> => {
+  let index = 0;
+  let tokens = [];
+  let iterator = iterable[Symbol.iterator]();
+
+  return {
+    next: () => {
+      const result = iterator.next();
+
+      if (result.done) {
+        tokens.push(result);
+      }
+
+      index++;
+
+      return result.value;
+    },
+    restore: (oldIndex: number) => (index = oldIndex),
+    save: () => index,
+  };
+};
