@@ -12,7 +12,7 @@ import { parseString } from "./parse";
 
 const a = token<string, number>((character) => character === "a");
 const b = token<string, number>((character) => character === "b");
-const c = token<string, number>((character) => character === "b");
+const c = token<string, number>((character) => character === "c");
 
 describe(token.name, () => {
   it("parses a token", () => {
