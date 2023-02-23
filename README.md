@@ -7,6 +7,14 @@
 
 Parser combinator for nontrivial tokens in TypeScript.
 
+Currently, this package supports only content-free grammars.
+But you can easily extend it by forking it and modifying `TokenIterator` to handle generic states.
+
+## Features
+
+- Support for nontrivial tokens
+  - Lines in line-oriented configuration file formats, HTML nodes, etc.
+
 ## License
 
 [MIT](LICENSE)
