@@ -182,3 +182,17 @@ export const lazy = <T, V>(createParser: () => Parser<T, V>): Parser<T, V> => {
     return parser(iterator);
   };
 };
+
+export const not = <T, V>(parser: Parser<T, V>): Parser<T, T> => {
+  const parseAny = any<T>();
+
+  return (iterator) => {
+    try {
+      parser(iterator);
+    } catch (_) {
+      return parseAny(iterator);
+    }
+
+    throw new Error("Parser succeeded");
+  };
+};
