@@ -1,7 +1,7 @@
 import { Parser } from "./parser";
 
 export const any =
-  <T, S>(): Parser<T, S, T> =>
+  <T>(): Parser<T, T> =>
   (iterator) => {
     const token = iterator.next();
 
@@ -11,7 +11,7 @@ export const any =
   };
 
 export const token =
-  <T, S>(test: (token: T) => boolean): Parser<T, S, T> =>
+  <T>(test: (token: T) => boolean): Parser<T, T> =>
   (iterator) => {
     const token = iterator.next();
 
@@ -25,14 +25,14 @@ export const token =
   };
 
 export const sequence =
-  <T, S, V extends [unknown, ...unknown[]]>(
-    ...parsers: { [key in keyof V]: Parser<T, S, V[key]> }
-  ): Parser<T, S, V> =>
+  <T, V extends [unknown, ...unknown[]]>(
+    ...parsers: { [key in keyof V]: Parser<T, V[key]> }
+  ): Parser<T, V> =>
   (iterator) =>
     parsers.map((parser) => parser(iterator)) as V;
 
 export const many =
-  <T, S, V>(parser: Parser<T, S, V>): Parser<T, S, V[]> =>
+  <T, V>(parser: Parser<T, V>): Parser<T, V[]> =>
   (iterator) => {
     const values = [];
 
@@ -50,7 +50,7 @@ export const many =
     return values;
   };
 
-export const many1 = <T, S, V>(parser: Parser<T, S, V>): Parser<T, S, V[]> => {
+export const many1 = <T, V>(parser: Parser<T, V>): Parser<T, V[]> => {
   const parse = many(parser);
 
   return (iterator) => {
@@ -75,11 +75,11 @@ const assertToken: <T>(token: T | null) => asserts token is NonNullable<T> = <
 };
 
 export const surrounded =
-  <T, S, V>(
-    start: Parser<T, S, unknown>,
-    content: Parser<T, S, V>,
-    end: Parser<T, S, unknown>
-  ): Parser<T, S, V> =>
+  <T, V>(
+    start: Parser<T, unknown>,
+    content: Parser<T, V>,
+    end: Parser<T, unknown>
+  ): Parser<T, V> =>
   (iterator) => {
     start(iterator);
     const value = content(iterator);
@@ -89,17 +89,14 @@ export const surrounded =
   };
 
 export const map =
-  <T, S, V, W>(
-    callback: (value: V) => W,
-    parser: Parser<T, S, V>
-  ): Parser<T, S, W> =>
+  <T, V, W>(parser: Parser<T, V>, callback: (value: V) => W): Parser<T, W> =>
   (iterator) =>
     callback(parser(iterator));
 
 export const choice =
-  <T, S, V extends [unknown, ...unknown[]]>(
-    ...parsers: { [key in keyof V]: Parser<T, S, V[key]> }
-  ): Parser<T, S, V[number]> =>
+  <T, V extends [unknown, ...unknown[]]>(
+    ...parsers: { [key in keyof V]: Parser<T, V[key]> }
+  ): Parser<T, V[number]> =>
   (iterator) => {
     for (const parser of parsers) {
       const state = iterator.save();
@@ -115,10 +112,10 @@ export const choice =
   };
 
 export const separatedBy =
-  <T, S, V>(
-    content: Parser<T, S, V>,
-    separator: Parser<T, S, unknown>
-  ): Parser<T, S, V[]> =>
+  <T, V>(
+    content: Parser<T, V>,
+    separator: Parser<T, unknown>
+  ): Parser<T, V[]> =>
   (iterator) => {
     const values = [];
     const state = iterator.save();
@@ -145,10 +142,10 @@ export const separatedBy =
   };
 
 export const separatedOrEndedBy =
-  <T, S, V>(
-    content: Parser<T, S, V>,
-    separator: Parser<T, S, unknown>
-  ): Parser<T, S, V[]> =>
+  <T, V>(
+    content: Parser<T, V>,
+    separator: Parser<T, unknown>
+  ): Parser<T, V[]> =>
   (iterator) => {
     const values = [];
     const state = iterator.save();
@@ -174,10 +171,8 @@ export const separatedOrEndedBy =
     }
   };
 
-export const lazy = <T, S, V>(
-  createParser: () => Parser<T, S, V>
-): Parser<T, S, V> => {
-  let parser: Parser<T, S, V> | undefined;
+export const lazy = <T, V>(createParser: () => Parser<T, V>): Parser<T, V> => {
+  let parser: Parser<T, V> | undefined;
 
   return (iterator) => {
     if (!parser) {
