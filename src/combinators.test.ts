@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   choice,
+  lazy,
   many,
   many1,
   map,
@@ -11,6 +12,7 @@ import {
   token,
 } from "./combinators";
 import { parseString } from "./parse";
+import { Parser } from "./parser";
 
 const a = token<string, number>((character) => character === "a");
 const b = token<string, number>((character) => character === "b");
@@ -178,5 +180,16 @@ describe(separatedOrEndedBy.name, () => {
     expect(parseString(sequence(separatedOrEndedBy(a, b), c), "ababc")).toEqual(
       [["a", "a"], "c"]
     );
+  });
+});
+
+describe(lazy.name, () => {
+  it("parses a recursive expression", () => {
+    type Result = [string, Result | string];
+    const parser: Parser<string, number, Result | string> = lazy(() =>
+      choice(sequence<string, number, Result>(a, parser), b)
+    );
+
+    expect(parseString(parser, "aab")).toEqual(["a", ["a", "b"]]);
   });
 });

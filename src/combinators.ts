@@ -173,3 +173,17 @@ export const separatedOrEndedBy =
       }
     }
   };
+
+export const lazy = <T, S, V>(
+  createParser: () => Parser<T, S, V>
+): Parser<T, S, V> => {
+  let parser: Parser<T, S, V> | undefined;
+
+  return (iterator) => {
+    if (!parser) {
+      parser = createParser();
+    }
+
+    return parser(iterator);
+  };
+};
