@@ -1,1 +1,11 @@
-{ "words": ["codecov", "combinators", "parcom"] }
+{
+  "words": [
+    "ababa",
+    "ababab",
+    "ababc",
+    "abac",
+    "codecov",
+    "combinators",
+    "parcom"
+  ]
+}

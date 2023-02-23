@@ -113,3 +113,77 @@ export const choice =
 
     throw new Error("All parser failed");
   };
+
+export const separatedBy =
+  <T, S, V>(
+    content: Parser<T, S, V>,
+    separator: Parser<T, S, unknown>
+  ): Parser<T, S, V[]> =>
+  (iterator) => {
+    const values = [];
+    const state = iterator.save();
+
+    try {
+      values.push(content(iterator));
+    } catch (_) {
+      iterator.restore(state);
+      return values;
+    }
+
+    for (;;) {
+      const state = iterator.save();
+
+      try {
+        separator(iterator);
+      } catch (_) {
+        iterator.restore(state);
+        return values;
+      }
+
+      values.push(content(iterator));
+    }
+  };
+
+export const separatedOrEndedBy =
+  <T, S, V>(
+    content: Parser<T, S, V>,
+    separator: Parser<T, S, unknown>
+  ): Parser<T, S, V[]> =>
+  (iterator) => {
+    const values = [];
+    const state = iterator.save();
+
+    try {
+      values.push(content(iterator));
+    } catch (_) {
+      iterator.restore(state);
+      return values;
+    }
+
+    for (;;) {
+      let state = iterator.save();
+
+      try {
+        separator(iterator);
+        state = iterator.save();
+        values.push(content(iterator));
+      } catch (_) {
+        iterator.restore(state);
+        return values;
+      }
+    }
+  };
+
+export const lazy = <T, S, V>(
+  createParser: () => Parser<T, S, V>
+): Parser<T, S, V> => {
+  let parser: Parser<T, S, V> | undefined;
+
+  return (iterator) => {
+    if (!parser) {
+      parser = createParser();
+    }
+
+    return parser(iterator);
+  };
+};
