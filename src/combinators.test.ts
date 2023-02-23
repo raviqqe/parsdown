@@ -204,6 +204,14 @@ describe(not.name, () => {
   it("fails to parse a value", () => {
     expect(() => parseString(not(a), "a")).toThrowError("Parser succeeded");
   });
+
+  it("parses values", () => {
+    expect(parseString(many(not(a)), "bb")).toEqual(["b", "b"]);
+  });
+
+  it("parses values with choice", () => {
+    expect(parseString(many(not(choice(a, b))), "cc")).toEqual(["c", "c"]);
+  });
 });
 
 describe(prefix.name, () => {
