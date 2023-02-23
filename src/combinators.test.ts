@@ -42,8 +42,8 @@ describe(sequence.name, () => {
       sequence(
         a,
         map(
-          (x) => Number(x),
-          token((character: string) => character === "1")
+          token((character: string) => character === "1"),
+          (x) => Number(x)
         )
       ),
       "a1"
@@ -79,7 +79,7 @@ describe(map.name, () => {
   it("maps a value", () => {
     expect(
       parseString(
-        map((x) => x + "b", a),
+        map(a, (x) => x + "b"),
         "a"
       )
     ).toEqual("ab");

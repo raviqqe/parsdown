@@ -89,7 +89,7 @@ export const surrounded =
   };
 
 export const map =
-  <T, V, W>(callback: (value: V) => W, parser: Parser<T, V>): Parser<T, W> =>
+  <T, V, W>(parser: Parser<T, V>, callback: (value: V) => W): Parser<T, W> =>
   (iterator) =>
     callback(parser(iterator));
 
