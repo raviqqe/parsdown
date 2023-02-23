@@ -24,8 +24,8 @@ export const iterableIterator = <T>(
   iterable: Iterable<T>
 ): TokenIterator<T, number> => {
   let index = 0;
-  let tokens: T[] = [];
-  let iterator = iterable[Symbol.iterator]();
+  const tokens: T[] = [];
+  const iterator = iterable[Symbol.iterator]();
 
   return {
     next: () => {
