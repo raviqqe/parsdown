@@ -187,9 +187,12 @@ export const not = <T, V>(parser: Parser<T, V>): Parser<T, T> => {
   const parseAny = any<T>();
 
   return (iterator) => {
+    const state = iterator.save();
+
     try {
       parser(iterator);
     } catch (_) {
+      iterator.restore(state);
       return parseAny(iterator);
     }
 
