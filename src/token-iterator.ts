@@ -30,7 +30,7 @@ export const iterableIterator = <T>(
   return {
     next: () => {
       if (index < tokens.length) {
-        return tokens[index] ?? null;
+        return tokens[index++] ?? null;
       }
 
       const result = iterator.next();
