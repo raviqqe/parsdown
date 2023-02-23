@@ -113,3 +113,34 @@ export const choice =
 
     throw new Error("All parser failed");
   };
+
+export const separatedBy =
+  <T, S, V>(
+    content: Parser<T, S, V>,
+    separator: Parser<T, S, unknown>
+  ): Parser<T, S, V[]> =>
+  (iterator) => {
+    const values = [];
+
+    for (;;) {
+      const state = iterator.save();
+
+      if (values.length) {
+        try {
+          separator(iterator);
+        } catch (_) {
+          iterator.restore(state);
+          return values;
+        }
+
+        values.push(content(iterator));
+      } else {
+        try {
+          values.push(content(iterator));
+        } catch (_) {
+          iterator.restore(state);
+          return values;
+        }
+      }
+    }
+  };

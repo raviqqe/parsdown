@@ -4,6 +4,7 @@ import {
   many,
   many1,
   map,
+  separatedBy,
   sequence,
   surrounded,
   token,
@@ -99,5 +100,27 @@ describe(choice.name, () => {
 describe(surrounded.name, () => {
   it("parses a surrounded content", () => {
     expect(parseString(surrounded(a, b, c), "abc")).toEqual("b");
+  });
+});
+
+describe(separatedBy.name, () => {
+  it("parses nothing", () => {
+    expect(parseString(separatedBy(a, b), "")).toEqual([]);
+  });
+
+  it("parses a value", () => {
+    expect(parseString(separatedBy(a, b), "a")).toEqual(["a"]);
+  });
+
+  it("parses two values", () => {
+    expect(parseString(separatedBy(a, b), "aba")).toEqual(["a", "a"]);
+  });
+
+  it("parses three values", () => {
+    expect(parseString(separatedBy(a, b), "ababa")).toEqual(["a", "a", "a"]);
+  });
+
+  it("fails to parse values", () => {
+    expect(() => parseString(separatedBy(a, b), "ab")).toThrowError();
   });
 });
