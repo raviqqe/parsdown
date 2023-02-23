@@ -5,7 +5,17 @@
 [![npm](https://img.shields.io/npm/v/@raviqqe/parcom?style=flat-square)](https://www.npmjs.com/package/@raviqqe/parcom)
 [![License](https://img.shields.io/github/license/raviqqe/parcom.ts.svg?style=flat-square)](LICENSE)
 
-Parser combinator for nontrivial tokens in TypeScript.
+A parser combinator library for nontrivial tokens written in TypeScript.
+
+## Features
+
+- Support for any tokens
+  - Lines in line-oriented configuration file formats, HTML nodes, etc.
+- A simple set of combinators
+- Strict typing
+
+Currently, this package supports only content-free grammars.
+But you can easily extend it by forking it and modifying `TokenIterator` to handle generic states.
 
 ## License
 
