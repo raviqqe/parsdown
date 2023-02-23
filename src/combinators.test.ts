@@ -26,24 +26,11 @@ describe(token.name, () => {
 
 describe(sequence.name, () => {
   it("parses a token", () => {
-    expect(
-      parseString(
-        sequence(token<string, number>((character) => character === "a")),
-        "a"
-      )
-    ).toEqual(["a"]);
+    expect(parseString(sequence(a), "a")).toEqual(["a"]);
   });
 
   it("parses tokens", () => {
-    expect(
-      parseString(
-        sequence(
-          token<string, number>((character) => character === "a"),
-          token<string, number>((character) => character === "b")
-        ),
-        "ab"
-      )
-    ).toEqual(["a", "b"]);
+    expect(parseString(sequence(a, b), "ab")).toEqual(["a", "b"]);
   });
 
   it("parses tokens of different types", () => {
