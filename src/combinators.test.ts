@@ -129,7 +129,7 @@ describe(choice.name, () => {
 });
 
 describe(surrounded.name, () => {
-  it("maps a value", () => {
+  it("parses a surrounded content", () => {
     expect(parseString(surrounded(a, b, c), "abc")).toEqual("b");
   });
 });
