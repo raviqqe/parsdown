@@ -5,6 +5,7 @@ import {
   many,
   many1,
   map,
+  not,
   separatedBy,
   separatedOrEndedBy,
   sequence,
@@ -121,7 +122,9 @@ describe(separatedBy.name, () => {
   });
 
   it("fails to parse values", () => {
-    expect(() => parseString(separatedBy(a, b), "ab")).toThrowError();
+    expect(() => parseString(separatedBy(a, b), "ab")).toThrowError(
+      "Unexpected end of tokens"
+    );
   });
 
   it("does not parse a separator", () => {
@@ -188,5 +191,15 @@ describe(lazy.name, () => {
     );
 
     expect(parseString(parser, "aab")).toEqual(["a", ["a", "b"]]);
+  });
+});
+
+describe(not.name, () => {
+  it("parses a value", () => {
+    expect(parseString(not(a), "b")).toBe("b");
+  });
+
+  it("fails to parse a value", () => {
+    expect(() => parseString(not(a), "a")).toThrowError("Parser succeeded");
   });
 });
