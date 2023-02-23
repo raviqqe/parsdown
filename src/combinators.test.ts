@@ -125,7 +125,7 @@ describe(separatedBy.name, () => {
     expect(() => parseString(separatedBy(a, b), "ab")).toThrowError();
   });
 
-  it("does not parse a separactor", () => {
+  it("does not parse a separator", () => {
     expect(parseString(separatedOrEndedBy(a, b), "b")).toEqual([]);
   });
 
@@ -170,7 +170,7 @@ describe(separatedOrEndedBy.name, () => {
     ]);
   });
 
-  it("does not parse a separactor", () => {
+  it("does not parse a separator", () => {
     expect(parseString(separatedOrEndedBy(a, b), "b")).toEqual([]);
   });
 
