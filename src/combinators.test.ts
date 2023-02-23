@@ -6,9 +6,11 @@ import {
   many1,
   map,
   not,
+  prefix,
   separatedBy,
   separatedOrEndedBy,
   sequence,
+  suffix,
   surrounded,
   token,
 } from "./combinators";
@@ -201,5 +203,17 @@ describe(not.name, () => {
 
   it("fails to parse a value", () => {
     expect(() => parseString(not(a), "a")).toThrowError("Parser succeeded");
+  });
+});
+
+describe(prefix.name, () => {
+  it("parses a prefix", () => {
+    expect(parseString(prefix(a, b), "ab")).toBe("b");
+  });
+});
+
+describe(suffix.name, () => {
+  it("parses a suffix", () => {
+    expect(parseString(suffix(a, b), "ab")).toBe("a");
   });
 });

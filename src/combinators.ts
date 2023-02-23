@@ -183,7 +183,7 @@ export const lazy = <T, V>(createParser: () => Parser<T, V>): Parser<T, V> => {
   };
 };
 
-export const not = <T, V>(parser: Parser<T, V>): Parser<T, T> => {
+export const not = <T>(parser: Parser<T, unknown>): Parser<T, T> => {
   const parseAny = any<T>();
 
   return (iterator) => {
@@ -199,3 +199,13 @@ export const not = <T, V>(parser: Parser<T, V>): Parser<T, T> => {
     throw new Error("Parser succeeded");
   };
 };
+
+export const prefix = <T, V>(
+  prefix: Parser<T, unknown>,
+  parser: Parser<T, V>
+): Parser<T, V> => map(sequence(prefix, parser), ([, value]) => value);
+
+export const suffix = <T, V>(
+  parser: Parser<T, V>,
+  suffix: Parser<T, unknown>
+): Parser<T, V> => map(sequence(parser, suffix), ([value]) => value);
