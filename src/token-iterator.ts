@@ -22,7 +22,7 @@ export const stringIterator = (
 
 export const iterableIterator = <T>(
   iterable: Iterable<T>
-): TokenIterator<string, number> => {
+): TokenIterator<T, number> => {
   let index = 0;
   let tokens: T[] = [];
   let iterator = iterable[Symbol.iterator]();
@@ -30,15 +30,16 @@ export const iterableIterator = <T>(
   return {
     next: () => {
       if (index < tokens.length) {
-        return tokens[index];
+        return tokens[index] ?? null;
       }
 
       const result = iterator.next();
 
-      if (!result.done) {
-        tokens.push(result.value);
+      if (result.done) {
+        return null;
       }
 
+      tokens.push(result.value);
       index++;
 
       return result.value;
