@@ -43,7 +43,7 @@ describe(sequence.name, () => {
         a,
         map(
           (x) => Number(x),
-          token<string>((character) => character === "1")
+          token((character: string) => character === "1")
         )
       ),
       "a1"
@@ -90,10 +90,7 @@ describe(choice.name, () => {
   it("maps a value", () => {
     expect(
       parseString(
-        choice<string, [[string, string], [string, string, string]]>(
-          sequence(a, b),
-          sequence(a, a, b)
-        ),
+        choice(sequence<string, [string, string]>(a, b), sequence(a, a, b)),
         "aab"
       )
     ).toEqual(["a", "a", "b"]);
