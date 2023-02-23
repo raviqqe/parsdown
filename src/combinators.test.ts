@@ -190,3 +190,14 @@ describe(lazy.name, () => {
     expect(parseString(parser, "aab")).toEqual(["a", ["a", "b"]]);
   });
 });
+
+describe(not.name, () => {
+  it("parses a recursive expression", () => {
+    type Result = [string, Result | string];
+    const parser: Parser<string, Result | string> = lazy(() =>
+      choice(sequence(a, parser), b)
+    );
+
+    expect(parseString(parser, "aab")).toEqual(["a", ["a", "b"]]);
+  });
+});
