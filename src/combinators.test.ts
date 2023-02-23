@@ -1,9 +1,18 @@
 import { describe, expect, it } from "vitest";
-import { choice, many, many1, map, sequence, token } from "./combinators";
+import {
+  choice,
+  many,
+  many1,
+  map,
+  sequence,
+  surrounded,
+  token,
+} from "./combinators";
 import { parseString } from "./parse";
 
 const a = token<string, number>((character) => character === "a");
 const b = token<string, number>((character) => character === "b");
+const c = token<string, number>((character) => character === "b");
 
 describe(token.name, () => {
   it("parses a token", () => {
@@ -116,5 +125,11 @@ describe(choice.name, () => {
         "aab"
       )
     ).toEqual(["a", "a", "b"]);
+  });
+});
+
+describe(surrounded.name, () => {
+  it("maps a value", () => {
+    expect(parseString(surrounded(a, b, c), "abc")).toEqual("b");
   });
 });
