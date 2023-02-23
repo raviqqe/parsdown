@@ -14,9 +14,9 @@ import {
 import { parseString } from "./parse";
 import { Parser } from "./parser";
 
-const a = token<string, number>((character) => character === "a");
-const b = token<string, number>((character) => character === "b");
-const c = token<string, number>((character) => character === "c");
+const a = token((character: string) => character === "a");
+const b = token((character: string) => character === "b");
+const c = token((character: string) => character === "c");
 
 describe(token.name, () => {
   it("parses a token", () => {
@@ -43,7 +43,7 @@ describe(sequence.name, () => {
         a,
         map(
           (x) => Number(x),
-          token<string, number>((character) => character === "1")
+          token<string>((character) => character === "1")
         )
       ),
       "a1"
@@ -90,7 +90,7 @@ describe(choice.name, () => {
   it("maps a value", () => {
     expect(
       parseString(
-        choice<string, number, [[string, string], [string, string, string]]>(
+        choice<string, [[string, string], [string, string, string]]>(
           sequence(a, b),
           sequence(a, a, b)
         ),
@@ -186,8 +186,8 @@ describe(separatedOrEndedBy.name, () => {
 describe(lazy.name, () => {
   it("parses a recursive expression", () => {
     type Result = [string, Result | string];
-    const parser: Parser<string, number, Result | string> = lazy(() =>
-      choice(sequence<string, number, Result>(a, parser), b)
+    const parser: Parser<string, Result | string> = lazy(() =>
+      choice(sequence(a, parser), b)
     );
 
     expect(parseString(parser, "aab")).toEqual(["a", ["a", "b"]]);
