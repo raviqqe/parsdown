@@ -16,21 +16,11 @@ const c = token<string, number>((character) => character === "c");
 
 describe(token.name, () => {
   it("parses a token", () => {
-    expect(
-      parseString(
-        token((character) => character === "a"),
-        "a"
-      )
-    ).toBe("a");
+    expect(parseString(a, "a")).toBe("a");
   });
 
   it("fails to parse a token", () => {
-    expect(() =>
-      parseString(
-        token((character) => character === "a"),
-        "b"
-      )
-    ).toThrowError("Unexpected token");
+    expect(() => parseString(a, "b")).toThrowError("Unexpected token");
   });
 });
 
@@ -59,7 +49,7 @@ describe(sequence.name, () => {
   it("parses tokens of different types", () => {
     const xs: [string, number] = parseString(
       sequence(
-        token<string, number>((character) => character === "a"),
+        a,
         map(
           (x) => Number(x),
           token<string, number>((character) => character === "1")
@@ -74,23 +64,17 @@ describe(sequence.name, () => {
 
 describe(many.name, () => {
   it("parses many tokens", () => {
-    expect(
-      parseString(many(token((character) => character === "a")), "aa")
-    ).toEqual(["a", "a"]);
+    expect(parseString(many(a), "aa")).toEqual(["a", "a"]);
   });
 
   it("fails to parse the last token", () => {
-    expect(
-      parseString(many(token((character) => character === "a")), "ab")
-    ).toEqual(["a"]);
+    expect(parseString(many(a), "ab")).toEqual(["a"]);
   });
 });
 
 describe(many1.name, () => {
   it("parses many tokens", () => {
-    expect(
-      parseString(many1(token((character) => character === "a")), "aa")
-    ).toEqual(["a", "a"]);
+    expect(parseString(many1(a), "aa")).toEqual(["a", "a"]);
   });
 
   it("fails to parse 0 token", () => {
@@ -104,10 +88,7 @@ describe(map.name, () => {
   it("maps a value", () => {
     expect(
       parseString(
-        map(
-          (a) => a + "b",
-          token<string, number>((character) => character === "a")
-        ),
+        map((x) => x + "b", a),
         "a"
       )
     ).toEqual("ab");
