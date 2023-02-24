@@ -22,6 +22,7 @@ import { Parser } from "./parser";
 const a = token((character: string) => character === "a");
 const b = token((character: string) => character === "b");
 const c = token((character: string) => character === "c");
+const d = token((character: string) => character === "d");
 
 describe(token.name, () => {
   it("parses a token", () => {
@@ -261,5 +262,19 @@ describe(section.name, () => {
         "abc"
       )
     ).toEqual(["a", ["b", "c"]]);
+  });
+
+  it("parses a hierarchy of sections", () => {
+    expect(parseString(section(a, section(b, c)), "abc")).toEqual([
+      "a",
+      ["b", "c"],
+    ]);
+  });
+
+  it("parses a deep hierarchy of sections", () => {
+    expect(parseString(section(a, section(b, section(c, d))), "abcd")).toEqual([
+      "a",
+      ["b", ["c", "d"]],
+    ]);
   });
 });
