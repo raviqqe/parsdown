@@ -58,8 +58,8 @@ const wrapBaseInput = <T>(input: BaseInput<T>): Input<T> => {
 
   return {
     ...input,
+    getHeads: () => [...heads],
     popHead: () => heads.pop(),
     pushHead: (head) => heads.push(head),
-    getHeads: () => [...heads],
   };
 };
