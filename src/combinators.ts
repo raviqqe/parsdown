@@ -209,3 +209,6 @@ export const suffix = <T, V>(
   parser: Parser<T, V>,
   suffix: Parser<T, unknown>
 ): Parser<T, V> => map(sequence(parser, suffix), ([value]) => value);
+
+// TODO
+export const head = <T, V>(parser: Parser<T, V>): Parser<T, V> => parser;

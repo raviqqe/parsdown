@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   choice,
+  head,
   lazy,
   many,
   many1,
@@ -223,5 +224,11 @@ describe(prefix.name, () => {
 describe(suffix.name, () => {
   it("parses a suffix", () => {
     expect(parseString(suffix(a, b), "ab")).toBe("a");
+  });
+});
+
+describe(head.name, () => {
+  it("parses a head", () => {
+    expect(parseString(head(a), "a")).toBe("a");
   });
 });
