@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  any,
   choice,
-  head,
   lazy,
   many,
   many1,
@@ -32,6 +32,24 @@ describe(token.name, () => {
 
   it("fails to parse a token", () => {
     expect(() => parseString(a, "b")).toThrowError("Unexpected token");
+  });
+});
+
+describe(any.name, () => {
+  it("parses any token", () => {
+    expect(parseString(any(), "a")).toBe("a");
+  });
+
+  it("does not parse an empty token", () => {
+    expect(() => parseString(any(), "")).toThrowError(
+      "Unexpected end of tokens"
+    );
+  });
+
+  it("does not parse any head", () => {
+    expect(() => parseString(section(a, any()), "aa")).toThrowError(
+      "Unexpected head"
+    );
   });
 });
 
@@ -216,6 +234,12 @@ describe(not.name, () => {
   it("parses values with choice", () => {
     expect(parseString(many(not(choice(a, b))), "cc")).toEqual(["c", "c"]);
   });
+
+  it("does not parse any head", () => {
+    expect(() => parseString(section(a, not(b)), "aa")).toThrowError(
+      "Unexpected head"
+    );
+  });
 });
 
 describe(prefix.name, () => {
@@ -236,7 +260,7 @@ describe(section.name, () => {
   });
 
   it("parses a section terminated by another", () => {
-    expect(parseString(section(a, many(not(head()))), "abba")).toEqual([
+    expect(parseString(section(a, many(any())), "abba")).toEqual([
       "a",
       ["b", "b"],
     ]);

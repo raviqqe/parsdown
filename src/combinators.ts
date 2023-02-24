@@ -14,23 +14,26 @@ export const token =
     return token;
   };
 
-export const any = <T>(): Parser<T, T> => token(() => true);
+export const any = <T>(): Parser<T, T> => {
+  const parseAny = token((_: T) => true);
 
-export const head =
-  <T>(): Parser<T, unknown> =>
-  (input) => {
+  return (input) => {
     for (const head of input.getHeads()) {
       const state = input.save();
 
       try {
-        return head(input);
+        head(input);
       } catch (_) {
         input.restore(state);
+        continue;
       }
+
+      throw new Error("Unexpected head");
     }
 
-    throw new Error("Unexpected non-head token");
+    return parseAny(input);
   };
+};
 
 export const sequence =
   <T, V extends [unknown, ...unknown[]]>(
