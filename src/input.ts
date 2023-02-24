@@ -18,12 +18,10 @@ export const stringInput = (string: string): Input<string> => {
   };
 };
 
-export const iterableInput = <T>(
-  iterable: Iterable<T>
-): Input<T> => {
+export const iterableInput = <T>(iterable: Iterable<T>): Input<T> => {
   let index = 0;
   const tokens: T[] = [];
-  const input = iterable[Symbol.input]();
+  const input = iterable[Symbol.iterator]();
 
   return {
     next: () => {
