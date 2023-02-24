@@ -243,3 +243,11 @@ export const parallel =
 
     return values as V;
   };
+
+export const option = <T, V>(parser: Parser<T, V>): Parser<T, V | null> =>
+  choice(parser, none());
+
+export const none =
+  <T>(): Parser<T, null> =>
+  () =>
+    null;

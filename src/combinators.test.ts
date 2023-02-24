@@ -6,7 +6,9 @@ import {
   many,
   many1,
   map,
+  none,
   not,
+  option,
   parallel,
   prefix,
   section,
@@ -312,5 +314,25 @@ describe(parallel.name, () => {
         "ab"
       )
     ).toEqual(["a", [["a"], "b"]]);
+  });
+});
+
+describe(option.name, () => {
+  it("parses nothing", () => {
+    expect(parseString(option(a), "")).toBe(null);
+  });
+
+  it("parses a value", () => {
+    expect(parseString(option(a), "a")).toBe("a");
+  });
+});
+
+describe(none.name, () => {
+  it("parses nothing", () => {
+    expect(parseString(none(), "")).toBe(null);
+  });
+
+  it("parses a value after nothing", () => {
+    expect(parseString(sequence(none(), a), "a")).toEqual([null, "a"]);
   });
 });
