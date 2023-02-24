@@ -1,28 +1,33 @@
 import { Parser } from "./parser";
 
-export const any =
-  <T>(): Parser<T, T> =>
-  (input) => {
-    const token = input.next();
-
-    assertToken(token);
-
-    return token;
-  };
-
 export const token =
   <T>(test: (token: T) => boolean): Parser<T, T> =>
   (input) => {
     const token = input.next();
 
-    assertToken(token);
+    if (!token) {
+      throw new Error("Unexpected end of tokens");
+    } else if (!test(token)) {
+      throw new Error("Unexpected token");
+    }
 
-    if (!test(token)) {
+    for (const head of input.heads) {
+      const state = input.save();
+
+      try {
+        head(input);
+      } catch (_) {
+        input.restore(state);
+        continue;
+      }
+
       throw new Error("Unexpected token");
     }
 
     return token;
   };
+
+export const any = <T>(): Parser<T, T> => token(() => true);
 
 export const sequence =
   <T, V extends [unknown, ...unknown[]]>(
@@ -62,16 +67,6 @@ export const many1 = <T, V>(parser: Parser<T, V>): Parser<T, V[]> => {
 
     return values;
   };
-};
-
-const assertToken: <T>(token: T | null) => asserts token is NonNullable<T> = <
-  T
->(
-  token: T | null
-): asserts token is NonNullable<T> => {
-  if (!token) {
-    throw new Error("Unexpected end of tokens");
-  }
 };
 
 export const surrounded =
@@ -210,5 +205,19 @@ export const suffix = <T, V>(
   suffix: Parser<T, unknown>
 ): Parser<T, V> => map(sequence(parser, suffix), ([value]) => value);
 
-// TODO
-export const head = <T, V>(parser: Parser<T, V>): Parser<T, V> => parser;
+export const section =
+  <T, V1, V2>(
+    head: Parser<T, V1>,
+    content: Parser<T, V2>
+  ): Parser<T, [V1, V2]> =>
+  (input) => {
+    const headValue = head(input);
+    input.pushHead(head);
+
+    try {
+      const contentValue = content(input);
+      return [headValue, contentValue];
+    } finally {
+      input.popHead();
+    }
+  };

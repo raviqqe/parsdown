@@ -1,13 +1,14 @@
 import { describe, expect, it } from "vitest";
 import {
+  any,
   choice,
-  head,
   lazy,
   many,
   many1,
   map,
   not,
   prefix,
+  section,
   separatedBy,
   separatedOrEndedBy,
   sequence,
@@ -227,8 +228,15 @@ describe(suffix.name, () => {
   });
 });
 
-describe(head.name, () => {
-  it("parses a head", () => {
-    expect(parseString(head(a), "a")).toBe("a");
+describe(section.name, () => {
+  it("parses a section", () => {
+    expect(parseString(section(a, b), "ab")).toEqual(["a", "b"]);
+  });
+
+  it("parses a section terminated by another", () => {
+    expect(parseString(section(a, many(any())), "abba")).toEqual([
+      "a",
+      ["b", "b"],
+    ]);
   });
 });
