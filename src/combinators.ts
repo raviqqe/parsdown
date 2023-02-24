@@ -14,9 +14,10 @@ export const token =
     return token;
   };
 
-export const any =
-  <T>(): Parser<T, unknown> =>
-  (input) => {
+export const any = <T>(): Parser<T, T> => {
+  const parseAny = token((_: T) => true);
+
+  return (input) => {
     for (const head of input.getHeads()) {
       const state = input.save();
 
@@ -30,8 +31,9 @@ export const any =
       throw new Error("Unexpected head");
     }
 
-    return token((_: T) => true)(input);
+    return parseAny(input);
   };
+};
 
 export const sequence =
   <T, V extends [unknown, ...unknown[]]>(
