@@ -3,24 +3,25 @@ import { Parser } from "./parser";
 export const token =
   <T>(test: (token: T) => boolean): Parser<T, T> =>
   (input) => {
-    const token = input.next();
-
-    if (!token) {
-      throw new Error("Unexpected end of tokens");
-    } else if (!test(token)) {
-      throw new Error("Unexpected token");
-    }
-
     for (const head of input.heads) {
       const state = input.save();
 
       try {
         head(input);
+        console.log();
       } catch (_) {
         input.restore(state);
         continue;
       }
 
+      throw new Error("Unexpected token");
+    }
+
+    const token = input.next();
+
+    if (!token) {
+      throw new Error("Unexpected end of tokens");
+    } else if (!test(token)) {
       throw new Error("Unexpected token");
     }
 
