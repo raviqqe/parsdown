@@ -1,10 +1,10 @@
-export interface TokenIterator<T> {
+export interface Input<T> {
   next: () => T | null;
   save: () => number;
   restore: (state: number) => void;
 }
 
-export const stringIterator = (string: string): TokenIterator<string> => {
+export const stringInput = (string: string): Input<string> => {
   let index = 0;
 
   return {
@@ -18,12 +18,10 @@ export const stringIterator = (string: string): TokenIterator<string> => {
   };
 };
 
-export const iterableIterator = <T>(
-  iterable: Iterable<T>
-): TokenIterator<T> => {
+export const iterableInput = <T>(iterable: Iterable<T>): Input<T> => {
   let index = 0;
   const tokens: T[] = [];
-  const iterator = iterable[Symbol.iterator]();
+  const input = iterable[Symbol.iterator]();
 
   return {
     next: () => {
@@ -31,7 +29,7 @@ export const iterableIterator = <T>(
         return tokens[index++] ?? null;
       }
 
-      const result = iterator.next();
+      const result = input.next();
 
       if (result.done) {
         return null;

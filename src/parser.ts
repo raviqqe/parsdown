@@ -1,3 +1,3 @@
-import { TokenIterator } from "./token-iterator";
+import { Input } from "./input";
 
-export type Parser<T, V> = (iterator: TokenIterator<T>) => V;
+export type Parser<T, V> = (input: Input<T>) => V;

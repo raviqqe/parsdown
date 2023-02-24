@@ -1,4 +1,4 @@
 export * from "./parser";
-export * from "./token-iterator";
+export * from "./input";
 export * from "./parse";
 export * from "./combinators";
