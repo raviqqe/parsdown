@@ -7,6 +7,7 @@ import {
   many1,
   map,
   not,
+  parallel,
   prefix,
   section,
   separatedBy,
@@ -275,6 +276,15 @@ describe(section.name, () => {
     expect(parseString(section(a, section(b, section(c, d))), "abcd")).toEqual([
       "a",
       ["b", ["c", "d"]],
+    ]);
+  });
+});
+
+describe(parallel.name, () => {
+  it("parses values", () => {
+    expect(parseString(parallel(a, sequence(many(not(b)), b)), "ab")).toEqual([
+      "a",
+      [["a"], "b"],
     ]);
   });
 });

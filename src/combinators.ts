@@ -224,3 +224,19 @@ export const section =
       input.popHead();
     }
   };
+
+export const parallel =
+  <T, V extends [unknown, ...unknown[]]>(
+    ...parsers: { [key in keyof V]: Parser<T, V[key]> }
+  ): Parser<T, V> =>
+  (input) => {
+    const values = [];
+
+    for (const parser of parsers) {
+      const state = input.save();
+      values.push(parser(input));
+      input.restore(state);
+    }
+
+    return values as V;
+  };
