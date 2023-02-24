@@ -1,4 +1,4 @@
-# parsdown.ts
+# parsdown
 
 [![GitHub Action](https://img.shields.io/github/actions/workflow/status/raviqqe/parsdown.ts/test.yaml?branch=main&style=flat-square)](https://github.com/raviqqe/parsdown.ts/actions)
 [![Codecov](https://img.shields.io/codecov/c/github/raviqqe/parsdown.ts.svg?style=flat-square)](https://codecov.io/gh/raviqqe/parsdown.ts)
