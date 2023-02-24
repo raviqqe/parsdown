@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vitest";
 import {
   choice,
+  head,
   lazy,
   many,
   many1,
   map,
   not,
   prefix,
+  section,
   separatedBy,
   separatedOrEndedBy,
   sequence,
@@ -20,6 +22,7 @@ import { Parser } from "./parser";
 const a = token((character: string) => character === "a");
 const b = token((character: string) => character === "b");
 const c = token((character: string) => character === "c");
+const d = token((character: string) => character === "d");
 
 describe(token.name, () => {
   it("parses a token", () => {
@@ -223,5 +226,55 @@ describe(prefix.name, () => {
 describe(suffix.name, () => {
   it("parses a suffix", () => {
     expect(parseString(suffix(a, b), "ab")).toBe("a");
+  });
+});
+
+describe(section.name, () => {
+  it("parses a section", () => {
+    expect(parseString(section(a, b), "ab")).toEqual(["a", "b"]);
+  });
+
+  it("parses a section terminated by another", () => {
+    expect(parseString(section(a, many(not(head()))), "abba")).toEqual([
+      "a",
+      ["b", "b"],
+    ]);
+  });
+
+  it("parses a choice of sections", () => {
+    expect(parseString(choice(section(a, b), section(b, c)), "bc")).toEqual([
+      "b",
+      "c",
+    ]);
+  });
+
+  it("parses a choice of sections with the same head", () => {
+    expect(parseString(choice(section(a, b), section(a, c)), "ac")).toEqual([
+      "a",
+      "c",
+    ]);
+  });
+
+  it("parses a choice of sections with the same head and similar content", () => {
+    expect(
+      parseString(
+        choice(section(a, sequence(b, b)), section(a, sequence(b, c))),
+        "abc"
+      )
+    ).toEqual(["a", ["b", "c"]]);
+  });
+
+  it("parses a hierarchy of sections", () => {
+    expect(parseString(section(a, section(b, c)), "abc")).toEqual([
+      "a",
+      ["b", "c"],
+    ]);
+  });
+
+  it("parses a deep hierarchy of sections", () => {
+    expect(parseString(section(a, section(b, section(c, d))), "abcd")).toEqual([
+      "a",
+      ["b", ["c", "d"]],
+    ]);
   });
 });

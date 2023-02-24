@@ -1,13 +1,21 @@
-export interface Input<T> {
+export interface Input<T> extends BaseInput<T> {
+  popHead: () => void;
+  pushHead: (parser: Parser<T>) => void;
+  getHeads: () => Parser<T>[];
+}
+
+export interface BaseInput<T> {
   next: () => T | null;
   save: () => number;
   restore: (state: number) => void;
 }
 
+type Parser<T> = (input: Input<T>) => unknown;
+
 export const stringInput = (string: string): Input<string> => {
   let index = 0;
 
-  return {
+  return wrapBaseInput({
     next: () => {
       const character = string[index];
       index++;
@@ -15,7 +23,7 @@ export const stringInput = (string: string): Input<string> => {
     },
     restore: (oldIndex: number) => (index = oldIndex),
     save: () => index,
-  };
+  });
 };
 
 export const iterableInput = <T>(iterable: Iterable<T>): Input<T> => {
@@ -23,7 +31,7 @@ export const iterableInput = <T>(iterable: Iterable<T>): Input<T> => {
   const tokens: T[] = [];
   const input = iterable[Symbol.iterator]();
 
-  return {
+  return wrapBaseInput({
     next: () => {
       if (index < tokens.length) {
         return tokens[index++] ?? null;
@@ -42,5 +50,16 @@ export const iterableInput = <T>(iterable: Iterable<T>): Input<T> => {
     },
     restore: (oldIndex: number) => (index = oldIndex),
     save: () => index,
+  });
+};
+
+const wrapBaseInput = <T>(input: BaseInput<T>): Input<T> => {
+  const heads: Parser<T>[] = [];
+
+  return {
+    ...input,
+    getHeads: () => [...heads],
+    popHead: () => heads.pop(),
+    pushHead: (head) => heads.push(head),
   };
 };
