@@ -3,20 +3,6 @@ import { Parser } from "./parser";
 export const token =
   <T>(test: (token: T) => boolean): Parser<T, T> =>
   (input) => {
-    for (const head of input.heads) {
-      const state = input.save();
-
-      try {
-        head(input);
-        console.log();
-      } catch (_) {
-        input.restore(state);
-        continue;
-      }
-
-      throw new Error("Unexpected token");
-    }
-
     const token = input.next();
 
     if (!token) {
@@ -29,6 +15,27 @@ export const token =
   };
 
 export const any = <T>(): Parser<T, T> => token(() => true);
+
+export const nonHead = <T>(): Parser<T, T> => {
+  const parseAny = any<T>();
+
+  return (input) => {
+    for (const head of input.heads) {
+      const state = input.save();
+
+      try {
+        head(input);
+      } catch (_) {
+        input.restore(state);
+        continue;
+      }
+
+      throw new Error("Unexpected head");
+    }
+
+    return parseAny(input);
+  };
+};
 
 export const sequence =
   <T, V extends [unknown, ...unknown[]]>(
