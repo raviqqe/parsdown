@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import {
   any,
   choice,
-  head,
   lazy,
   many,
   many1,
@@ -261,7 +260,7 @@ describe(section.name, () => {
   });
 
   it("parses a section terminated by another", () => {
-    expect(parseString(section(a, many(not(head()))), "abba")).toEqual([
+    expect(parseString(section(a, many(any())), "abba")).toEqual([
       "a",
       ["b", "b"],
     ]);
