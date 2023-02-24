@@ -247,4 +247,7 @@ export const parallel =
 export const option = <T, V>(parser: Parser<T, V>): Parser<T, V | null> =>
   choice(parser, none());
 
-export const none = () => () => null;
+export const none =
+  <T>(): Parser<T, null> =>
+  () =>
+    null;
