@@ -239,4 +239,27 @@ describe(section.name, () => {
       ["b", "b"],
     ]);
   });
+
+  it("parses a choice of sections", () => {
+    expect(parseString(choice(section(a, b), section(b, c)), "bc")).toEqual([
+      "b",
+      "c",
+    ]);
+  });
+
+  it("parses a choice of sections with the same head", () => {
+    expect(parseString(choice(section(a, b), section(a, c)), "ac")).toEqual([
+      "a",
+      "c",
+    ]);
+  });
+
+  it("parses a choice of sections with the same head and similar content", () => {
+    expect(
+      parseString(
+        choice(section(a, sequence(b, b)), section(a, sequence(b, c))),
+        "abc"
+      )
+    ).toEqual(["a", ["b", "c"]]);
+  });
 });
