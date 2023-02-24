@@ -282,9 +282,11 @@ describe(section.name, () => {
 
 describe(parallel.name, () => {
   it("parses values", () => {
-    expect(parseString(parallel(a, sequence(many(not(b)), b)), "ab")).toEqual([
-      "a",
-      [["a"], "b"],
-    ]);
+    expect(
+      parseString(
+        parallel(a, sequence<string, [string[], string]>(many(not(b)), b)),
+        "ab"
+      )
+    ).toEqual(["a", [["a"], "b"]]);
   });
 });
