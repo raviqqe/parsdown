@@ -16,8 +16,9 @@ export const token =
 
 export const any = <T>(): Parser<T, T> => token(() => true);
 
-export const head = <T>(): Parser<T, unknown> => {
-  return (input) => {
+export const head =
+  <T>(): Parser<T, unknown> =>
+  (input) => {
     for (const head of input.getHeads()) {
       const state = input.save();
 
@@ -30,7 +31,6 @@ export const head = <T>(): Parser<T, unknown> => {
 
     throw new Error("Unexpected non-head token");
   };
-};
 
 export const sequence =
   <T, V extends [unknown, ...unknown[]]>(
