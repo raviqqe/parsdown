@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { iterableIterator, stringIterator } from "./token-iterator";
+import { iterableIterator, stringIterator } from "./input";
 
 describe(stringIterator.name, () => {
   it("iterates over a string", () => {
