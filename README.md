@@ -5,17 +5,16 @@
 [![npm](https://img.shields.io/npm/v/@raviqqe/parsdown?style=flat-square)](https://www.npmjs.com/package/@raviqqe/parsdown)
 [![License](https://img.shields.io/github/license/raviqqe/parsdown.ts.svg?style=flat-square)](LICENSE)
 
-A parser combinator library for nontrivial tokens written in TypeScript.
+A parser combinator library for hierarchical tokens written in TypeScript.
 
 ## Features
 
-- Support for any tokens
-  - Lines in line-oriented configuration file formats, HTML nodes, etc.
-- A simple set of combinators
+- Support for hierarchical tokens
+  - Markdown, HTML, line-oriented configuration file formats, etc.
+- Section parsing
+  - A `section` combinator splits hierarchical sections by their head tokens.
+- A versatile set of combinators
 - Strict typing
-
-Currently, this package supports only content-free grammars.
-But you can easily extend it by forking it and modifying `TokenIterator` to handle generic states.
 
 ## License
 
