@@ -2,7 +2,7 @@
   "name": "@raviqqe/parsdown",
   "version": "1.2.0",
   "description": "Parser combinator in TypeScript",
-  "repository": "https://github.com/raviqqe/parsdown.ts",
+  "repository": "https://github.com/raviqqe/parsdown",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
