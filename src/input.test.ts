@@ -1,48 +1,48 @@
 import { describe, expect, it } from "vitest";
-import { iterableIterator, stringIterator } from "./input";
+import { iterableInput, stringInput } from "./input";
 
-describe(stringIterator.name, () => {
+describe(stringInput.name, () => {
   it("iterates over a string", () => {
-    const iterator = stringIterator("abc");
+    const input = stringInput("abc");
 
-    expect(iterator.next()).toBe("a");
-    expect(iterator.next()).toBe("b");
-    expect(iterator.next()).toBe("c");
+    expect(input.next()).toBe("a");
+    expect(input.next()).toBe("b");
+    expect(input.next()).toBe("c");
   });
 
   it("handles save and restore", () => {
-    const iterator = stringIterator("abc");
-    const state = iterator.save();
+    const input = stringInput("abc");
+    const state = input.save();
 
-    expect(iterator.next()).toBe("a");
+    expect(input.next()).toBe("a");
 
-    iterator.restore(state);
+    input.restore(state);
 
-    expect(iterator.next()).toBe("a");
-    expect(iterator.next()).toBe("b");
-    expect(iterator.next()).toBe("c");
+    expect(input.next()).toBe("a");
+    expect(input.next()).toBe("b");
+    expect(input.next()).toBe("c");
   });
 });
 
-describe(iterableIterator.name, () => {
+describe(iterableInput.name, () => {
   it("iterates over a string", () => {
-    const iterator = iterableIterator("abc");
+    const input = iterableInput("abc");
 
-    expect(iterator.next()).toBe("a");
-    expect(iterator.next()).toBe("b");
-    expect(iterator.next()).toBe("c");
+    expect(input.next()).toBe("a");
+    expect(input.next()).toBe("b");
+    expect(input.next()).toBe("c");
   });
 
   it("handles save and restore", () => {
-    const iterator = iterableIterator("abc");
-    const state = iterator.save();
+    const input = iterableInput("abc");
+    const state = input.save();
 
-    expect(iterator.next()).toBe("a");
+    expect(input.next()).toBe("a");
 
-    iterator.restore(state);
+    input.restore(state);
 
-    expect(iterator.next()).toBe("a");
-    expect(iterator.next()).toBe("b");
-    expect(iterator.next()).toBe("c");
+    expect(input.next()).toBe("a");
+    expect(input.next()).toBe("b");
+    expect(input.next()).toBe("c");
   });
 });

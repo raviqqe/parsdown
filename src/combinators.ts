@@ -2,8 +2,8 @@ import { Parser } from "./parser";
 
 export const any =
   <T>(): Parser<T, T> =>
-  (iterator) => {
-    const token = iterator.next();
+  (input) => {
+    const token = input.next();
 
     assertToken(token);
 
@@ -12,8 +12,8 @@ export const any =
 
 export const token =
   <T>(test: (token: T) => boolean): Parser<T, T> =>
-  (iterator) => {
-    const token = iterator.next();
+  (input) => {
+    const token = input.next();
 
     assertToken(token);
 
@@ -28,21 +28,21 @@ export const sequence =
   <T, V extends [unknown, ...unknown[]]>(
     ...parsers: { [key in keyof V]: Parser<T, V[key]> }
   ): Parser<T, V> =>
-  (iterator) =>
-    parsers.map((parser) => parser(iterator)) as V;
+  (input) =>
+    parsers.map((parser) => parser(input)) as V;
 
 export const many =
   <T, V>(parser: Parser<T, V>): Parser<T, V[]> =>
-  (iterator) => {
+  (input) => {
     const values = [];
 
     for (;;) {
-      const state = iterator.save();
+      const state = input.save();
 
       try {
-        values.push(parser(iterator));
+        values.push(parser(input));
       } catch (_) {
-        iterator.restore(state);
+        input.restore(state);
         break;
       }
     }
@@ -53,8 +53,8 @@ export const many =
 export const many1 = <T, V>(parser: Parser<T, V>): Parser<T, V[]> => {
   const parse = many(parser);
 
-  return (iterator) => {
-    const values = parse(iterator);
+  return (input) => {
+    const values = parse(input);
 
     if (values.length === 0) {
       throw new Error("Too few values");
@@ -80,31 +80,31 @@ export const surrounded =
     content: Parser<T, V>,
     end: Parser<T, unknown>
   ): Parser<T, V> =>
-  (iterator) => {
-    start(iterator);
-    const value = content(iterator);
-    end(iterator);
+  (input) => {
+    start(input);
+    const value = content(input);
+    end(input);
 
     return value;
   };
 
 export const map =
   <T, V, W>(parser: Parser<T, V>, callback: (value: V) => W): Parser<T, W> =>
-  (iterator) =>
-    callback(parser(iterator));
+  (input) =>
+    callback(parser(input));
 
 export const choice =
   <T, V extends [unknown, ...unknown[]]>(
     ...parsers: { [key in keyof V]: Parser<T, V[key]> }
   ): Parser<T, V[number]> =>
-  (iterator) => {
+  (input) => {
     for (const parser of parsers) {
-      const state = iterator.save();
+      const state = input.save();
 
       try {
-        return parser(iterator);
+        return parser(input);
       } catch (_) {
-        iterator.restore(state);
+        input.restore(state);
       }
     }
 
@@ -116,28 +116,28 @@ export const separatedBy =
     content: Parser<T, V>,
     separator: Parser<T, unknown>
   ): Parser<T, V[]> =>
-  (iterator) => {
+  (input) => {
     const values = [];
-    const state = iterator.save();
+    const state = input.save();
 
     try {
-      values.push(content(iterator));
+      values.push(content(input));
     } catch (_) {
-      iterator.restore(state);
+      input.restore(state);
       return values;
     }
 
     for (;;) {
-      const state = iterator.save();
+      const state = input.save();
 
       try {
-        separator(iterator);
+        separator(input);
       } catch (_) {
-        iterator.restore(state);
+        input.restore(state);
         return values;
       }
 
-      values.push(content(iterator));
+      values.push(content(input));
     }
   };
 
@@ -146,26 +146,26 @@ export const separatedOrEndedBy =
     content: Parser<T, V>,
     separator: Parser<T, unknown>
   ): Parser<T, V[]> =>
-  (iterator) => {
+  (input) => {
     const values = [];
-    const state = iterator.save();
+    const state = input.save();
 
     try {
-      values.push(content(iterator));
+      values.push(content(input));
     } catch (_) {
-      iterator.restore(state);
+      input.restore(state);
       return values;
     }
 
     for (;;) {
-      let state = iterator.save();
+      let state = input.save();
 
       try {
-        separator(iterator);
-        state = iterator.save();
-        values.push(content(iterator));
+        separator(input);
+        state = input.save();
+        values.push(content(input));
       } catch (_) {
-        iterator.restore(state);
+        input.restore(state);
         return values;
       }
     }
@@ -174,26 +174,26 @@ export const separatedOrEndedBy =
 export const lazy = <T, V>(createParser: () => Parser<T, V>): Parser<T, V> => {
   let parser: Parser<T, V> | undefined;
 
-  return (iterator) => {
+  return (input) => {
     if (!parser) {
       parser = createParser();
     }
 
-    return parser(iterator);
+    return parser(input);
   };
 };
 
 export const not = <T>(parser: Parser<T, unknown>): Parser<T, T> => {
   const parseAny = any<T>();
 
-  return (iterator) => {
-    const state = iterator.save();
+  return (input) => {
+    const state = input.save();
 
     try {
-      parser(iterator);
+      parser(input);
     } catch (_) {
-      iterator.restore(state);
-      return parseAny(iterator);
+      input.restore(state);
+      return parseAny(input);
     }
 
     throw new Error("Parser succeeded");

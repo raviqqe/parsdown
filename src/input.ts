@@ -4,7 +4,7 @@ export interface Input<T> {
   restore: (state: number) => void;
 }
 
-export const stringIterator = (string: string): Input<string> => {
+export const stringInput = (string: string): Input<string> => {
   let index = 0;
 
   return {
@@ -18,12 +18,12 @@ export const stringIterator = (string: string): Input<string> => {
   };
 };
 
-export const iterableIterator = <T>(
+export const iterableInput = <T>(
   iterable: Iterable<T>
 ): Input<T> => {
   let index = 0;
   const tokens: T[] = [];
-  const iterator = iterable[Symbol.iterator]();
+  const input = iterable[Symbol.input]();
 
   return {
     next: () => {
@@ -31,7 +31,7 @@ export const iterableIterator = <T>(
         return tokens[index++] ?? null;
       }
 
-      const result = iterator.next();
+      const result = input.next();
 
       if (result.done) {
         return null;
