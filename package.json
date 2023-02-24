@@ -1,8 +1,8 @@
 {
-  "name": "@raviqqe/parcom",
+  "name": "@raviqqe/parsdown",
   "version": "1.2.0",
   "description": "Parser combinator in TypeScript",
-  "repository": "https://github.com/raviqqe/parcom.ts",
+  "repository": "https://github.com/raviqqe/parsdown.ts",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
