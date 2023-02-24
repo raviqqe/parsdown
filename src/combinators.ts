@@ -16,24 +16,19 @@ export const token =
 
 export const any = <T>(): Parser<T, T> => token(() => true);
 
-export const nonHead = <T>(): Parser<T, T> => {
-  const parseAny = any<T>();
-
+export const head = <T>(): Parser<T, unknown> => {
   return (input) => {
-    for (const head of input.heads) {
+    for (const head of input.getHeads()) {
       const state = input.save();
 
       try {
-        head(input);
+        return head(input);
       } catch (_) {
         input.restore(state);
-        continue;
       }
-
-      throw new Error("Unexpected head");
     }
 
-    return parseAny(input);
+    throw new Error("Unexpected non-head token");
   };
 };
 

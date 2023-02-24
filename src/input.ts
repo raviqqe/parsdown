@@ -1,7 +1,7 @@
 export interface Input<T> extends BaseInput<T> {
   pushHead: (parser: Parser<T>) => void;
   popHead: () => void;
-  heads: Parser<T>[];
+  getHeads: () => Parser<T>[];
 }
 
 export interface BaseInput<T> {
@@ -60,6 +60,6 @@ const wrapBaseInput = <T>(input: BaseInput<T>): Input<T> => {
     ...input,
     pushHead: (head) => heads.push(head),
     popHead: () => heads.pop(),
-    heads,
+    getHeads: () => [...heads],
   };
 };
