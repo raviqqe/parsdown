@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { iterableInput, stringInput } from "./input";
+import { iterableInput, stringInput } from "./input.js";
 
 describe(stringInput.name, () => {
   it("iterates over a string", () => {

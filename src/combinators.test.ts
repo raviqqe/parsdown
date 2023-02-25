@@ -18,9 +18,9 @@ import {
   suffix,
   surrounded,
   token,
-} from "./combinators";
-import { parseString } from "./parse";
-import { Parser } from "./parser";
+} from "./combinators.js";
+import { parseString } from "./parse.js";
+import { Parser } from "./parser.js";
 
 const a = token((character: string) => character === "a");
 const b = token((character: string) => character === "b");
