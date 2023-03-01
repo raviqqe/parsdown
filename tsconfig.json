@@ -1,7 +1,6 @@
 {
   "extends": "@raviqqe/tsconfig/tsconfig.json",
   "compilerOptions": {
-    "moduleResolution": "nodenext",
     "outDir": "dist",
     "rootDir": "src"
   },
