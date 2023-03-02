@@ -1,4 +1,4 @@
-import { Parser } from "./parser.js";
+import type { Parser } from "./parser.js";
 
 export const token =
   <T>(test: (token: T) => boolean): Parser<T, T> =>
