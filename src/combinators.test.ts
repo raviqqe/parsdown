@@ -44,13 +44,13 @@ describe(any.name, () => {
 
   it("does not parse an empty token", () => {
     expect(() => parseString(any(), "")).toThrowError(
-      "Unexpected end of tokens"
+      "Unexpected end of tokens",
     );
   });
 
   it("does not parse any head", () => {
     expect(() => parseString(section(a, any()), "aa")).toThrowError(
-      "Unexpected head"
+      "Unexpected head",
     );
   });
 });
@@ -70,10 +70,10 @@ describe(sequence.name, () => {
         a,
         map(
           token((character: string) => character === "1"),
-          (x) => Number(x)
-        )
+          (x) => Number(x),
+        ),
       ),
-      "a1"
+      "a1",
     );
 
     expect(xs).toEqual(["a", 1]);
@@ -97,7 +97,7 @@ describe(many1.name, () => {
 
   it("fails to parse 0 token", () => {
     expect(() =>
-      parseString(many1(token((character) => character === "a")), "")
+      parseString(many1(token((character) => character === "a")), ""),
     ).toThrowError("Too few values");
   });
 });
@@ -107,8 +107,8 @@ describe(map.name, () => {
     expect(
       parseString(
         map(a, (x) => x + "b"),
-        "a"
-      )
+        "a",
+      ),
     ).toEqual("ab");
   });
 });
@@ -118,8 +118,8 @@ describe(choice.name, () => {
     expect(
       parseString(
         choice(sequence<string, [string, string]>(a, b), sequence(a, a, b)),
-        "aab"
-      )
+        "aab",
+      ),
     ).toEqual(["a", "a", "b"]);
   });
 });
@@ -149,7 +149,7 @@ describe(separatedBy.name, () => {
 
   it("fails to parse values", () => {
     expect(() => parseString(separatedBy(a, b), "ab")).toThrowError(
-      "Unexpected end of tokens"
+      "Unexpected end of tokens",
     );
   });
 
@@ -204,7 +204,7 @@ describe(separatedOrEndedBy.name, () => {
 
   it("parses a value after separated values", () => {
     expect(parseString(sequence(separatedOrEndedBy(a, b), c), "ababc")).toEqual(
-      [["a", "a"], "c"]
+      [["a", "a"], "c"],
     );
   });
 });
@@ -213,7 +213,7 @@ describe(lazy.name, () => {
   it("parses a recursive expression", () => {
     type Result = [string, Result | string];
     const parser: Parser<string, Result | string> = lazy(() =>
-      choice(sequence(a, parser), b)
+      choice(sequence(a, parser), b),
     );
 
     expect(parseString(parser, "aab")).toEqual(["a", ["a", "b"]]);
@@ -239,7 +239,7 @@ describe(not.name, () => {
 
   it("does not parse any head", () => {
     expect(() => parseString(section(a, not(b)), "aa")).toThrowError(
-      "Unexpected head"
+      "Unexpected head",
     );
   });
 });
@@ -286,8 +286,8 @@ describe(section.name, () => {
     expect(
       parseString(
         choice(section(a, sequence(b, b)), section(a, sequence(b, c))),
-        "abc"
-      )
+        "abc",
+      ),
     ).toEqual(["a", ["b", "c"]]);
   });
 
@@ -311,8 +311,8 @@ describe(parallel.name, () => {
     expect(
       parseString(
         parallel(a, sequence<string, [string[], string]>(many(not(b)), b)),
-        "ab"
-      )
+        "ab",
+      ),
     ).toEqual(["a", [["a"], "b"]]);
   });
 });
