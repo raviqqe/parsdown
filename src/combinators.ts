@@ -79,7 +79,7 @@ export const surrounded =
   <T, V>(
     start: Parser<T, unknown>,
     content: Parser<T, V>,
-    end: Parser<T, unknown>
+    end: Parser<T, unknown>,
   ): Parser<T, V> =>
   (input) => {
     start(input);
@@ -115,7 +115,7 @@ export const choice =
 export const separatedBy =
   <T, V>(
     content: Parser<T, V>,
-    separator: Parser<T, unknown>
+    separator: Parser<T, unknown>,
   ): Parser<T, V[]> =>
   (input) => {
     const values = [];
@@ -145,7 +145,7 @@ export const separatedBy =
 export const separatedOrEndedBy =
   <T, V>(
     content: Parser<T, V>,
-    separator: Parser<T, unknown>
+    separator: Parser<T, unknown>,
   ): Parser<T, V[]> =>
   (input) => {
     const values = [];
@@ -203,18 +203,18 @@ export const not = <T>(parser: Parser<T, unknown>): Parser<T, T> => {
 
 export const prefix = <T, V>(
   prefix: Parser<T, unknown>,
-  parser: Parser<T, V>
+  parser: Parser<T, V>,
 ): Parser<T, V> => map(sequence(prefix, parser), ([, value]) => value);
 
 export const suffix = <T, V>(
   parser: Parser<T, V>,
-  suffix: Parser<T, unknown>
+  suffix: Parser<T, unknown>,
 ): Parser<T, V> => map(sequence(parser, suffix), ([value]) => value);
 
 export const section =
   <T, V1, V2>(
     head: Parser<T, V1>,
-    content: Parser<T, V2>
+    content: Parser<T, V2>,
   ): Parser<T, [V1, V2]> =>
   (input) => {
     const headValue = head(input);
