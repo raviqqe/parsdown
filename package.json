@@ -12,7 +12,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "npm run build:tsc && npm run build:esbuild",
-    "build:esbuild": "esbuild --bundle --minify --format=esm --sourcemap --outdir=dist src/index.ts",
+    "build:esbuild": "esbuild --minify --format=esm --sourcemap --outdir=dist src/*.ts",
     "build:tsc": "tsc --emitDeclarationOnly",
     "prepare": "npm run build",
     "lint": "eslint 'src/**/*.ts'",
