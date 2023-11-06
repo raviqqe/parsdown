@@ -14,7 +14,7 @@ A parser combinator library for hierarchical tokens written in TypeScript.
 - Section parsing
   - A `section` combinator splits hierarchical sections by their head tokens.
 - A versatile set of combinators
-- Stricti typing
+- Strict typing
 
 ## License
 
