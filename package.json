@@ -15,7 +15,7 @@
     "build:esbuild": "esbuild --bundle --minify --format=esm --sourcemap --outdir=dist src/index.ts",
     "build:tsc": "tsc --emitDeclarationOnly",
     "prepare": "npm run build",
-    "lint": "eslint 'src/**/*.ts'",
+    "lint": "eslint src",
     "test": "vitest --coverage"
   },
   "devDependencies": {
