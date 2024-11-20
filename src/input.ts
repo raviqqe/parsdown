@@ -1,13 +1,13 @@
-export interface Input<T> extends BaseInput<T> {
-  getHeads: () => Parser<T>[];
-  popHead: () => void;
-  pushHead: (parser: Parser<T>) => void;
-}
-
 export interface BaseInput<T> {
   next: () => T | null;
   restore: (state: number) => void;
   save: () => number;
+}
+
+export interface Input<T> extends BaseInput<T> {
+  getHeads: () => Parser<T>[];
+  popHead: () => void;
+  pushHead: (parser: Parser<T>) => void;
 }
 
 type Parser<T> = (input: Input<T>) => unknown;
