@@ -176,9 +176,7 @@ export const lazy = <T, V>(createParser: () => Parser<T, V>): Parser<T, V> => {
   let parser: Parser<T, V> | undefined;
 
   return (input) => {
-    if (!parser) {
-      parser = createParser();
-    }
+    parser ??= createParser();
 
     return parser(input);
   };
