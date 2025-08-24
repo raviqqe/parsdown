@@ -6,6 +6,7 @@
     "abac",
     "codecov",
     "combinators",
-    "parsdown"
+    "parsdown",
+    "rslib"
   ]
 }
