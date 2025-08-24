@@ -96,7 +96,7 @@ export const map =
 
 export const choice =
   <T, V extends [unknown, ...unknown[]]>(
-    ...parsers: { [key in keyof V]: Parser<T, V[key]> }
+    ...parsers: { [K in keyof V]: Parser<T, V[K]> }
   ): Parser<T, V[number]> =>
   (input) => {
     for (const parser of parsers) {
@@ -228,7 +228,7 @@ export const section =
 
 export const parallel =
   <T, V extends [unknown, ...unknown[]]>(
-    ...parsers: { [key in keyof V]: Parser<T, V[key]> }
+    ...parsers: { [K in keyof V]: Parser<T, V[K]> }
   ): Parser<T, V> =>
   (input) => {
     const values = [];
