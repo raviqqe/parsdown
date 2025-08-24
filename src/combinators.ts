@@ -37,7 +37,7 @@ export const any = <T>(): Parser<T, T> => {
 
 export const sequence =
   <T, V extends [unknown, ...unknown[]]>(
-    ...parsers: { [key in keyof V]: Parser<T, V[key]> }
+    ...parsers: { [K in keyof V]: Parser<T, V[K]> }
   ): Parser<T, V> =>
   (input) =>
     parsers.map((parser) => parser(input)) as V;
