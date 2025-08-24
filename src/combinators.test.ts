@@ -106,7 +106,7 @@ describe(map.name, () => {
   it("maps a value", () => {
     expect(
       parseString(
-        map(a, (x) => x + "b"),
+        map(a, (x) => `${x}b`),
         "a",
       ),
     ).toEqual("ab");
