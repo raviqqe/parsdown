@@ -22,7 +22,7 @@
     "@rslib/core": "^0.20.0",
     "@vitest/coverage-v8": "^4.0.1",
     "type-fest": "^5.0.0",
-    "typescript": "^5.9.2",
+    "typescript": "^6.0.2",
     "vitest": "^4.0.1"
   },
   "engines": {
