@@ -19,7 +19,7 @@ importers:
         version: 3.0.2
       '@rslib/core':
         specifier: ^0.23.1
-        version: 0.23.1(typescript@6.0.3)
+        version: 0.23.1(typescript@7.0.2)
       '@vitest/coverage-v8':
         specifier: ^4.0.1
         version: 4.1.10(vitest@4.1.10)
@@ -27,8 +27,8 @@ importers:
         specifier: ^5.0.0
         version: 5.8.0
       typescript:
-        specifier: ^6.0.2
-        version: 6.0.3
+        specifier: ^7.0.2
+        version: 7.0.2
       vitest:
         specifier: ^4.0.1
         version: 4.1.10(@vitest/coverage-v8@4.1.10)(vite@8.0.16)
@@ -1162,12 +1162,12 @@ snapshots:
     transitivePeerDependencies:
       - '@module-federation/runtime-tools'
 
-  '@rslib/core@0.23.1(typescript@6.0.3)':
+  '@rslib/core@0.23.1(typescript@7.0.2)':
     dependencies:
       '@rsbuild/core': 2.1.1
-      rsbuild-plugin-dts: 0.23.1(@rsbuild/core@2.1.1)(typescript@6.0.3)
+      rsbuild-plugin-dts: 0.23.1(@rsbuild/core@2.1.1)(typescript@7.0.2)
     optionalDependencies:
-      typescript: 6.0.3
+      typescript: 7.0.2
     transitivePeerDependencies:
       - '@module-federation/runtime-tools'
       - '@typescript/native-preview'
@@ -1522,12 +1522,12 @@ snapshots:
       '@rolldown/binding-win32-arm64-msvc': 1.0.3
       '@rolldown/binding-win32-x64-msvc': 1.0.3
 
-  rsbuild-plugin-dts@0.23.1(@rsbuild/core@2.1.1)(typescript@6.0.3):
+  rsbuild-plugin-dts@0.23.1(@rsbuild/core@2.1.1)(typescript@7.0.2):
     dependencies:
       '@ast-grep/napi': 0.37.0
       '@rsbuild/core': 2.1.1
     optionalDependencies:
-      typescript: 6.0.3
+      typescript: 7.0.2
 
   semver@7.8.5: {}
 
