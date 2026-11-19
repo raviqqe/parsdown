@@ -21,7 +21,7 @@
     "@raviqqe/tsconfig": "^3.0.4",
     "@rslib/core": "^1.0.5",
     "@vitest/coverage-v8": "^5.0.5",
-    "type-fest": "^5.10.0",
+    "type-fest": "^6.0.0",
     "typescript": "^7.0.2",
     "vitest": "^5.0.5"
   },
